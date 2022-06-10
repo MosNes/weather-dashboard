@@ -1,0 +1,13 @@
+header {
+    background-color: blue;
+    text-align: center;
+    padding: 15px;
+}
+
+#city-button-container {
+    padding: 10px;
+}
+
+#city-button-container .btn {
+    margin: 6px;
+}

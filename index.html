@@ -19,11 +19,14 @@
     </header>
 
     <main id="main-container" class="d-flex">
-
-        <div id="sidebar" class="col-12 col-md-3 d-flex flex-column">
-            <div id="search-container">
-
+        
+        <div id="sidebar" class="col-12 col-sm-12 col-md-4 col-lg-3 d-flex flex-column">
+            <div id="search-container" class="d-flex flex-column p-3 gap-3">
+                <label for="city-input" class="form-label">Search for a City:</label>
+                <input type="text" name="city" id="city-input" class="form-control">
+                <input class="btn btn-primary btn-block" type="submit" value="Submit">
             </div>
+
             <div id="city-button-container" class="d-flex flex-column">
                 <button type="button" class="btn btn-secondary btn-block">Austin</button>
                 <button type="button" class="btn btn-secondary btn-block">Chicago</button>
@@ -36,7 +39,7 @@
             </div>
         </div>
 
-        <div id="weather-card-container" class="col-12 col-md-9">
+        <div id="weather-card-container" class="col-12 col-md-8 col-lg-9">
             <div id="current-weather-card" class="col-12">
 
             </div>

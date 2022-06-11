@@ -2,11 +2,32 @@
 
 const apiKey = "4cab09c32f1d271efdfae18ead81ae10";
 var todaysDate = luxon.DateTime.now();
-var searchInputEl = $("#city-input")
+const searchInputEl = $("#city-input");
+const currentWeatherContainerEl = $("#current-weather-card");
+const forecastContainerEl= $("#forecast-card-container");
 
 
 
 //---------------------------FUNCTIONS---------------------------------------------
+var displayCurrentWeather = () => {
+
+    //create elements
+    let cardEl = $("<div>").addClass("card");
+    let cardBodyEl = $("<div>").addClass("card-body");
+    let cardTitleEl = $("<h3>").addClass("card-title").text("Charlotte");
+    let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(todaysDate.toLocaleString(luxon.DateTime.DATE_SHORT));
+    let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: ");
+    let windEl = $("<p>").addClass("card-text mb-2").text("Wind: ");
+    let HumidityEl = $("<p>").addClass("card-text mb-2").text("Humidity: ");
+    let uvEl = $("<p>").addClass("card-text mb-2").text("UV Index: ");
+
+    //add elements to DOM
+    cardBodyEl.append(cardTitleEl,cardSubtitleEl,tempEl,windEl,HumidityEl,uvEl);
+    cardEl.append(cardBodyEl);
+    currentWeatherContainerEl.append(cardEl);
+
+};
+
 
 // returns the forecast for the chosen city
 var getWeather = async (city, stateCode) => {
@@ -48,6 +69,9 @@ var getWeather = async (city, stateCode) => {
                     console.log("current Weather",currentWeather);
                     let forecastArray = data.daily;
                     console.log("forecast array",forecastArray);
+
+                    //constructs card to display current weather
+
                 })
         })
 };
@@ -82,4 +106,4 @@ var submitHandler = () => {
 
 //---------------------------INITIALIZATIONS---------------------------------------
 
-$("#submit-button").on("click", submitHandler);
+$("#submit-button").on("click", displayCurrentWeather);

@@ -9,19 +9,36 @@ const forecastContainerEl= $("#forecast-card-container");
 
 
 //---------------------------FUNCTIONS---------------------------------------------
-var displayCurrentWeather = () => {
+var displayCurrentWeather = (data,city) => {
 
+    currentWeatherContainerEl.empty();
+
+    console.log("Creating Elements");
     //create elements
     let cardEl = $("<div>").addClass("card");
     let cardBodyEl = $("<div>").addClass("card-body");
-    let cardTitleEl = $("<h3>").addClass("card-title").text("Charlotte");
-    let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(todaysDate.toLocaleString(luxon.DateTime.DATE_SHORT));
-    let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: ");
-    let windEl = $("<p>").addClass("card-text mb-2").text("Wind: ");
-    let HumidityEl = $("<p>").addClass("card-text mb-2").text("Humidity: ");
+    let cardTitleEl = $("<h3>").addClass("card-title").text(city);
+    let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
+    let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: "+data.temp);
+    let windEl = $("<p>").addClass("card-text mb-2").text("Wind: "+data.wind_speed+" mph");
+    let HumidityEl = $("<p>").addClass("card-text mb-2").text("Humidity: "+data.humidity+" %");
     let uvEl = $("<p>").addClass("card-text mb-2").text("UV Index: ");
+    let uvPillEl = $("<span>").addClass("badge").text(data.uvi);
+    
+    //gets the UV Index as a number and changes the color of the uvPillEl depending on the index's severity
+    let uvIndex = parseInt(data.uvi);
+    if(uvIndex < 2){
+        uvPillEl.addClass("bg-success");
+    }
+    else if (uvIndex > 2 && uvIndex < 6) {
+        uvPillEl.addClass("bg-warning");
+    }
+    else {
+        uvPillEl.addClass("bg-danger");
+    }
 
     //add elements to DOM
+    uvEl.append(uvPillEl);
     cardBodyEl.append(cardTitleEl,cardSubtitleEl,tempEl,windEl,HumidityEl,uvEl);
     cardEl.append(cardBodyEl);
     currentWeatherContainerEl.append(cardEl);
@@ -51,7 +68,9 @@ var getWeather = async (city, stateCode) => {
             console.log("lat", latitude);
             console.log("long", longitude)
             //this fetch has to be nested inside of this .then statement, because it can only run once the previous promises are resolved
-            await fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + latitude + '&lon=' + longitude + '&exclude=minutely,hourly,alerts&appid=' + apiKey)
+            //units=imperial to get temp in Farenheit and windspeed in mph
+            //excludes minutely forecasts, hourly forecasts, and weather alerts
+            await fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + latitude + '&lon=' + longitude + '&units=imperial&exclude=minutely,hourly,alerts&appid=' + apiKey)
                 //parses the new JSON response
                 .then(async function (response) {
                     if (response.ok) {
@@ -67,6 +86,11 @@ var getWeather = async (city, stateCode) => {
                 .then(async function (data) {
                     let currentWeather = data.current;
                     console.log("current Weather",currentWeather);
+                    //capitalizes the first letter of the city
+                    let capitalizedCity = city => {
+                        return city.charAt(0).toUpperCase()+city.slice(1);
+                    }
+                    displayCurrentWeather(currentWeather, capitalizedCity(city));
                     let forecastArray = data.daily;
                     console.log("forecast array",forecastArray);
 
@@ -106,4 +130,4 @@ var submitHandler = () => {
 
 //---------------------------INITIALIZATIONS---------------------------------------
 
-$("#submit-button").on("click", displayCurrentWeather);
+$("#submit-button").on("click", submitHandler);

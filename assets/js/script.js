@@ -9,42 +9,52 @@ var searchInputEl = $("#city-input")
 //---------------------------FUNCTIONS---------------------------------------------
 
 // returns the forecast for the chosen city
-var getWeather = async (city,stateCode) => {
+var getWeather = async (city, stateCode) => {
     //returns the latidude and longitude of the inputted city
-    await fetch('http://api.openweathermap.org/geo/1.0/direct?q='+city+','+stateCode+',us&limit=1&appid='+apiKey)
-    //parses the JSON response
-    .then(async function(response) {
-        let responseJSON = await response.json();
-        return responseJSON;
-    })
-    //gets the latitude and longitude, then uses it to make the API call to get the forecast
-    .then(async function(data) {
-        var latitude = data[0].lat;
-        var longitude =data[0].lon;
-        console.log("lat",latitude);
-        console.log("long",longitude)
-        await fetch('https://api.openweathermap.org/data/2.5/onecall?lat='+latitude+'&lon='+longitude+'&exclude=minutely,hourly,alerts&appid='+apiKey)
+    await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + city + ',' + stateCode + ',us&limit=1&appid=' + apiKey)
         //parses the JSON response
-        .then(async function(response) {
-            let responseJSON = await response.json();
-            console.log(responseJSON);
-            return responseJSON;
+        .then(async function (response) {
+            if (response.ok) {
+                let newResponse = await response.json();
+                return newResponse;
+            } else {
+                //if not successful, redirect to home page
+                document.location.replace("./index.html");
+            }
         })
-        .then(function(data) {
-            //get object containing the current weather
-            let currentWeather = data.current;
 
-            //get array containing the forecast data
-            let forecastArray = data.daily;
+        //gets the latitude and longitude, then uses it to make the API call to get the forecast
+        .then(async function (data) {
+            var latitude = data[0].lat;
+            var longitude = data[0].lon;
+            console.log("lat", latitude);
+            console.log("long", longitude)
+            //this fetch has to be nested inside of this .then statement, because it can only run once the previous promises are resolved
+            await fetch('https://api.openweathermap.org/data/2.5/onecall?lat=' + latitude + '&lon=' + longitude + '&exclude=minutely,hourly,alerts&appid=' + apiKey)
+                //parses the new JSON response
+                .then(async function (response) {
+                    if (response.ok) {
+                        let newResponse = await response.json();
+                        return newResponse;
+                    } else {
+                        //if not successful, redirect to home page
+                        document.location.replace("./index.html");
+                    }
+                })
 
-            //create card for current weather
-            let 
-
+                //displays the weather info from the parsed data
+                .then(async function (data) {
+                    let currentWeather = data.current;
+                    console.log("current Weather",currentWeather);
+                    let forecastArray = data.daily;
+                    console.log("forecast array",forecastArray);
+                })
         })
-      
-      });
-    
-    };
+};
+
+
+//gets the latitude and longitude, then uses it to make the API call to get the forecast
+
 
 var submitHandler = () => {
     //gets the value of the search input box, trims whitespace, converts to lowercase, and splits on "," to convert it to an
@@ -54,8 +64,8 @@ var submitHandler = () => {
     //get city string
     let city = input[0];
 
-     //remove all spaces from the state code
-    let stateCode = input[1].replace(/\s/g,"");
+    //remove all spaces from the state code
+    let stateCode = input[1].replace(/\s/g, "");
 
     //if state code is longer than 2 characters, display message and stop
     if (stateCode.length > 2) {
@@ -64,7 +74,7 @@ var submitHandler = () => {
     }
 
     //run the getWeather function using the input
-    getWeather(city,stateCode);
+    getWeather(city, stateCode);
 
     //reset search field
     searchInputEl.val("");
@@ -72,4 +82,4 @@ var submitHandler = () => {
 
 //---------------------------INITIALIZATIONS---------------------------------------
 
-$("#submit-button").on("click",submitHandler);
+$("#submit-button").on("click", submitHandler);

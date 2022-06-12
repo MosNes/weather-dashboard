@@ -1,4 +1,4 @@
-# Weather Dashboard App App
+# Weather Dashboard App
 
 Link to deployed app: https://mosnes.github.io/weather-dashboard/
 

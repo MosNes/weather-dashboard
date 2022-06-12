@@ -52,8 +52,13 @@ var createCityButton = (city, state) => {
     cityButtonContainerEl.append(cityButtonEl);
 };
 
+//calls the createCityButton function for each item in the searchHistory Array
 var createSearchHistoryButtons = () => {
-
+    for (var i = 0; i < searchHistory.length; i++){
+        let city = searchHistory[i].city;
+        let stateCode = searchHistory[i].state;
+        createCityButton(city,stateCode);
+    }
 };
 
 var displayCurrentWeather = (data, city) => {
@@ -226,7 +231,8 @@ var historyButtonHandler = function () {
 };
 
 //---------------------------INITIALIZATIONS---------------------------------------
-createCityButton("galax","va");
+loadSearchHistory();
+createSearchHistoryButtons();
 
 $("#submit-button").on("click", submitHandler);
 

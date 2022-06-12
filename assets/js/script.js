@@ -15,7 +15,7 @@ var storeSearchHistory = () => {
     //convert the searchHistory array into a JSON string
     let searchHistoryString = JSON.stringify(searchHistory);
     //store it in localStorage as "weatherSearchHistory"
-    localStorage.setItem("weatherSearchHistory",searchHistoryString);
+    localStorage.setItem("weatherSearchHistory", searchHistoryString);
 };
 
 //loads search history from localStorage
@@ -35,7 +35,7 @@ var loadSearchHistory = () => {
 
 //creates a button element for a city/state in search history
 var createCityButton = (city, state) => {
-    
+
     //function to capitalize city name
     let capitalizedCity = city => {
         return city.charAt(0).toUpperCase() + city.slice(1);
@@ -43,11 +43,11 @@ var createCityButton = (city, state) => {
 
     //creates city button
     let cityButtonEl = $("<button>")
-    .addClass("btn btn-secondary btn-block")
-    .text(capitalizedCity(city))
-    //stores city and state as data values on the element to be referenced later
-    .data("city",city)
-    .data("state",state);
+        .addClass("btn btn-secondary btn-block")
+        .text(capitalizedCity(city))
+        //stores city and state as data values on the element to be referenced later
+        .data("city", city)
+        .data("state", state);
 
     //append to DOM
     cityButtonContainerEl.append(cityButtonEl);
@@ -59,10 +59,10 @@ var createSearchHistoryButtons = () => {
     cityButtonContainerEl.empty();
 
     //creates new buttons from searchHistory
-    for (var i = 0; i < searchHistory.length; i++){
+    for (var i = 0; i < searchHistory.length; i++) {
         let city = searchHistory[i].city;
         let stateCode = searchHistory[i].state;
-        createCityButton(city,stateCode);
+        createCityButton(city, stateCode);
     }
 };
 
@@ -194,13 +194,23 @@ var getWeather = async (city, stateCode) => {
 var submitHandler = () => {
     //gets the value of the search input box, trims whitespace, converts to lowercase, and splits on "," to convert it to an
     //array containing the city and the state code
-    let input = searchInputEl.val().trim().toLowerCase().split(",");
+    let input = searchInputEl.val().trim().toLowerCase();
+    let city = "";
+    let stateCode = "";
 
-    //get city string
-    let city = input[0];
+    //checks to make sure input includes a comma separating city and state
+    if (input.includes(",")) {
+        let splitInput = input.split(",");
 
-    //remove all spaces from the state code
-    let stateCode = input[1].replace(/\s/g, "");
+        //get city string
+        city = splitInput[0];
+
+        //remove all spaces from the state code
+        stateCode = splitInput[1].replace(/\s/g, "");
+    } else {
+        window.alert("Please include a comma between the city and state");
+        return;
+    }
 
     //if state code is longer than 2 characters, display message and stop
     if (stateCode.length > 2) {
@@ -244,4 +254,4 @@ loadSearchHistory();
 
 $("#submit-button").on("click", submitHandler);
 
-$("#city-button-container").on("click",".btn", historyButtonHandler);
+$("#city-button-container").on("click", ".btn", historyButtonHandler);

@@ -29,6 +29,7 @@ var loadSearchHistory = () => {
     //otherwise parse the value into an array and update the value of searchHistory
     else {
         searchHistory = JSON.parse(storedSearchHistory);
+        createSearchHistoryButtons();
     }
 };
 
@@ -54,6 +55,10 @@ var createCityButton = (city, state) => {
 
 //calls the createCityButton function for each item in the searchHistory Array
 var createSearchHistoryButtons = () => {
+    //empties the container of current buttons
+    cityButtonContainerEl.empty();
+
+    //creates new buttons from searchHistory
     for (var i = 0; i < searchHistory.length; i++){
         let city = searchHistory[i].city;
         let stateCode = searchHistory[i].state;
@@ -173,7 +178,8 @@ var getWeather = async (city, stateCode) => {
                     forecastContainerEl.empty();
 
                     //constructs forecast cards to display current weather
-                    for (var i = 0; i < 5; i++) {
+                    //starts at index 1 to grab the next day instead of the current day first
+                    for (var i = 1; i < 5; i++) {
                         displayForecastCard(forecastArray[i]);
                     }
 
@@ -219,6 +225,9 @@ var submitHandler = () => {
 
     //reset search field
     searchInputEl.val("");
+
+    //reloads the search history buttons with newest entry
+    loadSearchHistory();
 };
 
 //apparently arrow function cannot be used with 'this' 
@@ -232,7 +241,6 @@ var historyButtonHandler = function () {
 
 //---------------------------INITIALIZATIONS---------------------------------------
 loadSearchHistory();
-createSearchHistoryButtons();
 
 $("#submit-button").on("click", submitHandler);
 

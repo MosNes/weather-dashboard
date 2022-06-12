@@ -20,4 +20,8 @@ header {
     #forecast-title {
         text-align: center;
     }
+
+    #current-weather-card .card-body{
+        text-align: center;
+    }
 }

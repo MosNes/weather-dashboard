@@ -32,11 +32,11 @@ var displayCurrentWeather = (data,city) => {
     if(uvIndex < 2){
         uvPillEl.addClass("bg-success");
     }
-    else if (uvIndex > 2 && uvIndex < 6) {
-        uvPillEl.addClass("bg-warning");
+    else if (uvIndex > 6) {
+        uvPillEl.addClass("bg-danger");
     }
     else {
-        uvPillEl.addClass("bg-danger");
+        uvPillEl.addClass("bg-warning");
     }
 
     //add elements to DOM

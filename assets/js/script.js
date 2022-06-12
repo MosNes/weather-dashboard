@@ -179,7 +179,7 @@ var getWeather = async (city, stateCode) => {
 
                     //constructs forecast cards to display current weather
                     //starts at index 1 to grab the next day instead of the current day first
-                    for (var i = 1; i < 5; i++) {
+                    for (var i = 1; i < 6; i++) {
                         displayForecastCard(forecastArray[i]);
                     }
 

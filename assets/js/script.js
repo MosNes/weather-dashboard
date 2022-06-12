@@ -44,12 +44,16 @@ var createCityButton = (city, state) => {
     let cityButtonEl = $("<button>")
     .addClass("btn btn-secondary btn-block")
     .text(capitalizedCity(city))
-    //stores city and state as data values on the HTML element to be referenced later
+    //stores city and state as data values on the element to be referenced later
     .data("city",city)
     .data("state",state);
 
     //append to DOM
     cityButtonContainerEl.append(cityButtonEl);
+};
+
+var createSearchHistoryButtons = () => {
+
 };
 
 var displayCurrentWeather = (data, city) => {
@@ -212,6 +216,18 @@ var submitHandler = () => {
     searchInputEl.val("");
 };
 
+//apparently arrow function cannot be used with 'this' 
+var historyButtonHandler = function () {
+    //get city and state from data saved to the button
+    let city = $(this).data("city");
+    let stateCode = $(this).data("state");
+    //call the getWeather function to display weather data for that city
+    getWeather(city, stateCode);
+};
+
 //---------------------------INITIALIZATIONS---------------------------------------
+createCityButton("galax","va");
 
 $("#submit-button").on("click", submitHandler);
+
+$("#city-button-container").on("click",".btn", historyButtonHandler);

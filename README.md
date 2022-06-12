@@ -13,7 +13,7 @@ HTML, CSS, and script.js created by me.
 
 This weather app was created to fit the following requirements outlined for the assignment:
 
----
+
 
 
 ## User Story
@@ -23,7 +23,7 @@ I WANT to see the weather outlook for multiple cities
 
 SO THAT I can plan a trip accordingly
 
----
+
 
 ## MVP Criteria
 GIVEN a weather dashboard with form inputs
@@ -48,7 +48,6 @@ WHEN I click on a city in the search history
 
 THEN I am again presented with current and future conditions for that city
 
----
 
 ## Built With
 * HTML

@@ -5,7 +5,7 @@ var todaysDate = luxon.DateTime.now();
 const searchInputEl = $("#city-input");
 const currentWeatherContainerEl = $("#current-weather-card");
 const forecastContainerEl= $("#forecast-card-container");
-
+var searchHistory = {};
 
 
 //---------------------------FUNCTIONS---------------------------------------------
@@ -19,6 +19,7 @@ var displayCurrentWeather = (data,city) => {
     let cardBodyEl = $("<div>").addClass("card-body");
     let cardTitleEl = $("<h3>").addClass("card-title").text(city);
     let iconContainerEl = $("<p>").addClass("card-text mb-2");
+    //the @2x in the URI returns a larger icon for this larger card
     let iconEl = $("<img>").attr("src","http://openweathermap.org/img/wn/"+data.weather[0].icon+"@2x.png")
     let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: "+data.temp);
@@ -42,6 +43,7 @@ var displayCurrentWeather = (data,city) => {
     //add elements to DOM
     uvEl.append(uvPillEl);
     iconContainerEl.append(iconEl);
+    //jQuery can append multiple items in one call
     cardBodyEl.append(cardTitleEl,cardSubtitleEl,iconContainerEl,tempEl,windEl,humidityEl,uvEl);
     cardEl.append(cardBodyEl);
     currentWeatherContainerEl.append(cardEl);
@@ -52,9 +54,13 @@ var displayForecastCard = (data) => {
     //create elements
     let cardEl = $("<div>").addClass("card bg-dark col-2 mb-4");
     let cardBodyEl = $("<div>").addClass("card-body");
-    let cardTitleEl = $("<h4>").addClass("card-title text-light").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
+    let cardTitleEl = $("<h4>").addClass("card-title text-light")
+    //this weather API uses UNIX strings for its datetime values .fromSeconds(parseInt(data.dt)) converts the UNIX string into a more traditional datetime object
+    .text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let iconContainerEl = $("<p>").addClass("card-text mb-2");
-    let iconEl = $("<img>").attr("src","http://openweathermap.org/img/wn/"+data.weather[0].icon+".png")
+    //removed the @2x from this URI to return a smaller Icon for these smaller cards
+    let iconEl = $("<img>").attr("src","http://openweathermap.org/img/wn/"+data.weather[0].icon+".png");
+    //added .day to get the daytime temp
     let tempEl = $("<p>").addClass("card-text text-light mb-2").text("Temp: "+data.temp.day);
     let windEl = $("<p>").addClass("card-text text-light mb-2").text("Wind: "+data.wind_speed+" mph");
     let humidityEl = $("<p>").addClass("card-text text-light mb-2").text("Humidity: "+data.humidity+" %");
@@ -110,15 +116,18 @@ var getWeather = async (city, stateCode) => {
                     }
                     displayCurrentWeather(currentWeather, capitalizedCity(city));
                     let forecastArray = data.daily;
-                    console.log(forecastArray);
 
+                    //removes any existing cards from the forecast container
+                    forecastContainerEl.empty();
+                    
+                    //constructs forecast cards to display current weather
                     for (var i = 0; i < 5; i++){
                         displayForecastCard(forecastArray[i]);
                         console.log("run"+i);
                     }
                     
 
-                    //constructs card to display current weather
+                  
 
                 })
         })

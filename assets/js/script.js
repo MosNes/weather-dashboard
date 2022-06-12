@@ -5,10 +5,12 @@ var todaysDate = luxon.DateTime.now();
 const searchInputEl = $("#city-input");
 const currentWeatherContainerEl = $("#current-weather-card");
 const forecastContainerEl = $("#forecast-card-container");
+const cityButtonContainerEl = $("#city-button-container")
 var searchHistory = [];
 
 
 //---------------------------FUNCTIONS---------------------------------------------
+//saves search history to localStorage
 var storeSearchHistory = () => {
     //convert the searchHistory array into a JSON string
     let searchHistoryString = JSON.stringify(searchHistory);
@@ -16,6 +18,7 @@ var storeSearchHistory = () => {
     localStorage.setItem("weatherSearchHistory",searchHistoryString);
 };
 
+//loads search history from localStorage
 var loadSearchHistory = () => {
     //get stored search history
     let storedSearchHistory = localStorage.getItem("weatherSearchHistory");
@@ -27,6 +30,26 @@ var loadSearchHistory = () => {
     else {
         searchHistory = JSON.parse(storedSearchHistory);
     }
+};
+
+//creates a button element for a city/state in search history
+var createCityButton = (city, state) => {
+    
+    //function to capitalize city name
+    let capitalizedCity = city => {
+        return city.charAt(0).toUpperCase() + city.slice(1);
+    };
+
+    //creates city button
+    let cityButtonEl = $("<button>")
+    .addClass("btn btn-secondary btn-block")
+    .text(capitalizedCity(city))
+    //stores city and state as data values on the HTML element to be referenced later
+    .data("city",city)
+    .data("state",state);
+
+    //append to DOM
+    cityButtonContainerEl.append(cityButtonEl);
 };
 
 var displayCurrentWeather = (data, city) => {
@@ -143,7 +166,6 @@ var getWeather = async (city, stateCode) => {
                     //constructs forecast cards to display current weather
                     for (var i = 0; i < 5; i++) {
                         displayForecastCard(forecastArray[i]);
-                        console.log("run" + i);
                     }
 
 

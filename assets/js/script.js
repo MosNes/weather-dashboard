@@ -18,6 +18,8 @@ var displayCurrentWeather = (data,city) => {
     let cardEl = $("<div>").addClass("card");
     let cardBodyEl = $("<div>").addClass("card-body");
     let cardTitleEl = $("<h3>").addClass("card-title").text(city);
+    let iconContainerEl = $("<p>").addClass("card-text mb-2");
+    let iconEl = $("<img>").attr("src","http://openweathermap.org/img/wn/"+data.weather[0].icon+"@2x.png")
     let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: "+data.temp);
     let windEl = $("<p>").addClass("card-text mb-2").text("Wind: "+data.wind_speed+" mph");
@@ -39,7 +41,8 @@ var displayCurrentWeather = (data,city) => {
 
     //add elements to DOM
     uvEl.append(uvPillEl);
-    cardBodyEl.append(cardTitleEl,cardSubtitleEl,tempEl,windEl,HumidityEl,uvEl);
+    iconContainerEl.append(iconEl);
+    cardBodyEl.append(cardTitleEl,cardSubtitleEl,iconContainerEl,tempEl,windEl,HumidityEl,uvEl);
     cardEl.append(cardBodyEl);
     currentWeatherContainerEl.append(cardEl);
 
@@ -65,8 +68,6 @@ var getWeather = async (city, stateCode) => {
         .then(async function (data) {
             var latitude = data[0].lat;
             var longitude = data[0].lon;
-            console.log("lat", latitude);
-            console.log("long", longitude)
             //this fetch has to be nested inside of this .then statement, because it can only run once the previous promises are resolved
             //units=imperial to get temp in Farenheit and windspeed in mph
             //excludes minutely forecasts, hourly forecasts, and weather alerts
@@ -85,7 +86,6 @@ var getWeather = async (city, stateCode) => {
                 //displays the weather info from the parsed data
                 .then(async function (data) {
                     let currentWeather = data.current;
-                    console.log("current Weather",currentWeather);
                     //capitalizes the first letter of the city
                     let capitalizedCity = city => {
                         return city.charAt(0).toUpperCase()+city.slice(1);

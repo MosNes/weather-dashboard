@@ -11,9 +11,9 @@ const forecastContainerEl= $("#forecast-card-container");
 //---------------------------FUNCTIONS---------------------------------------------
 var displayCurrentWeather = (data,city) => {
 
+    //clears current card if present
     currentWeatherContainerEl.empty();
 
-    console.log("Creating Elements");
     //create elements
     let cardEl = $("<div>").addClass("card");
     let cardBodyEl = $("<div>").addClass("card-body");
@@ -23,7 +23,7 @@ var displayCurrentWeather = (data,city) => {
     let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: "+data.temp);
     let windEl = $("<p>").addClass("card-text mb-2").text("Wind: "+data.wind_speed+" mph");
-    let HumidityEl = $("<p>").addClass("card-text mb-2").text("Humidity: "+data.humidity+" %");
+    let humidityEl = $("<p>").addClass("card-text mb-2").text("Humidity: "+data.humidity+" %");
     let uvEl = $("<p>").addClass("card-text mb-2").text("UV Index: ");
     let uvPillEl = $("<span>").addClass("badge").text(data.uvi);
     
@@ -42,10 +42,28 @@ var displayCurrentWeather = (data,city) => {
     //add elements to DOM
     uvEl.append(uvPillEl);
     iconContainerEl.append(iconEl);
-    cardBodyEl.append(cardTitleEl,cardSubtitleEl,iconContainerEl,tempEl,windEl,HumidityEl,uvEl);
+    cardBodyEl.append(cardTitleEl,cardSubtitleEl,iconContainerEl,tempEl,windEl,humidityEl,uvEl);
     cardEl.append(cardBodyEl);
     currentWeatherContainerEl.append(cardEl);
 
+};
+
+var displayForecastCard = (data) => {
+    //create elements
+    let cardEl = $("<div>").addClass("card bg-dark col-2 mb-4");
+    let cardBodyEl = $("<div>").addClass("card-body");
+    let cardTitleEl = $("<h4>").addClass("card-title text-light").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
+    let iconContainerEl = $("<p>").addClass("card-text mb-2");
+    let iconEl = $("<img>").attr("src","http://openweathermap.org/img/wn/"+data.weather[0].icon+".png")
+    let tempEl = $("<p>").addClass("card-text text-light mb-2").text("Temp: "+data.temp.day);
+    let windEl = $("<p>").addClass("card-text text-light mb-2").text("Wind: "+data.wind_speed+" mph");
+    let humidityEl = $("<p>").addClass("card-text text-light mb-2").text("Humidity: "+data.humidity+" %");
+
+    //add elements to DOM
+    iconContainerEl.append(iconEl);
+    cardBodyEl.append(cardTitleEl,iconContainerEl,tempEl,windEl,humidityEl,)
+    cardEl.append(cardBodyEl);
+    forecastContainerEl.append(cardEl);
 };
 
 
@@ -92,7 +110,13 @@ var getWeather = async (city, stateCode) => {
                     }
                     displayCurrentWeather(currentWeather, capitalizedCity(city));
                     let forecastArray = data.daily;
-                    console.log("forecast array",forecastArray);
+                    console.log(forecastArray);
+
+                    for (var i = 0; i < 5; i++){
+                        displayForecastCard(forecastArray[i]);
+                        console.log("run"+i);
+                    }
+                    
 
                     //constructs card to display current weather
 

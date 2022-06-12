@@ -11,3 +11,7 @@ header {
 #city-button-container .btn {
     margin: 6px;
 }
+
+#forecast-card-container .card {
+    min-width: 200px;
+}

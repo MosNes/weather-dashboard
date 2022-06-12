@@ -77,7 +77,7 @@ var displayCurrentWeather = (data, city) => {
     let cardTitleEl = $("<h3>").addClass("card-title").text(city);
     let iconContainerEl = $("<p>").addClass("card-text mb-2");
     //the @2x in the URI returns a larger icon for this larger card
-    let iconEl = $("<img>").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
+    let iconEl = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
     let cardSubtitleEl = $("<h5>").addClass("card-subtitle mb-2 text-muted").text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let tempEl = $("<p>").addClass("card-text mb-2").text("Temp: " + data.temp);
     let windEl = $("<p>").addClass("card-text mb-2").text("Wind: " + data.wind_speed + " mph");
@@ -116,7 +116,7 @@ var displayForecastCard = (data) => {
         .text(luxon.DateTime.fromSeconds(parseInt(data.dt)).toLocaleString(luxon.DateTime.DATE_SHORT));
     let iconContainerEl = $("<p>").addClass("card-text mb-2");
     //removed the @2x from this URI to return a smaller Icon for these smaller cards
-    let iconEl = $("<img>").attr("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + ".png");
+    let iconEl = $("<img>").attr("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + ".png");
     //added .day to get the daytime temp
     let tempEl = $("<p>").addClass("card-text text-light mb-2").text("Temp: " + data.temp.day);
     let windEl = $("<p>").addClass("card-text text-light mb-2").text("Wind: " + data.wind_speed + " mph");
@@ -133,7 +133,7 @@ var displayForecastCard = (data) => {
 // returns the forecast for the chosen city
 var getWeather = async (city, stateCode) => {
     //returns the latidude and longitude of the inputted city
-    await fetch('http://api.openweathermap.org/geo/1.0/direct?q=' + city + ',' + stateCode + ',us&limit=1&appid=' + apiKey)
+    await fetch('https://api.openweathermap.org/geo/1.0/direct?q=' + city + ',' + stateCode + ',us&limit=1&appid=' + apiKey)
         //parses the JSON response
         .then(async function (response) {
             if (response.ok) {

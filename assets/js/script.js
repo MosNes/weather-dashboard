@@ -191,7 +191,8 @@ var getWeather = async (city, stateCode) => {
 };
 
 
-var submitHandler = () => {
+var submitHandler = (event) => {
+    event.preventDefault();
     //gets the value of the search input box, trims whitespace, converts to lowercase, and splits on "," to convert it to an
     //array containing the city and the state code
     let input = searchInputEl.val().trim().toLowerCase();
@@ -252,6 +253,6 @@ var historyButtonHandler = function () {
 //---------------------------INITIALIZATIONS---------------------------------------
 loadSearchHistory();
 
-$("#submit-button").on("click", submitHandler);
+$(document).on("submit",'#seach-form', submitHandler);
 
 $("#city-button-container").on("click", ".btn", historyButtonHandler);
